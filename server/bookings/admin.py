@@ -4,4 +4,12 @@ from .models import Booking
 
 @admin.register(Booking)
 class Booking(admin.ModelAdmin):
-    pass
+    list_display = (
+        "__str__",
+        "user",
+        "check_in",
+        "check_out",
+        "experience_time",
+        "guests",
+    )
+    list_filter = ("kind",)

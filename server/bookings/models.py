@@ -3,6 +3,7 @@ from common.models import CommonModel
 
 
 class Booking(CommonModel):
+
     """Booking Model Definition"""
 
     class BookingKindChoices(models.TextChoices):
@@ -42,3 +43,6 @@ class Booking(CommonModel):
         null=True,
     )
     guests = models.PositiveIntegerField()
+
+    def __str__(self) -> str:
+        return f"{self.kind.title()}: {self.room if self.kind == 'room' else self.experience}"
