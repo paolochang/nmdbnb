@@ -11,6 +11,7 @@ class RoomAdmin(admin.ModelAdmin):
         "city",
         "country",
         "rooms",
+        "total_amenities",
         "kind",
         "price",
     )
