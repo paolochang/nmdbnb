@@ -10,15 +10,17 @@ class Photo(CommonModel):
     description = models.CharField(max_length=140)
     romm = models.ForeignKey(
         "rooms.Room",
-        on_delete=models.CASCADE,
         blank=True,
         null=True,
+        on_delete=models.CASCADE,
+        related_name="photos",
     )
     experience = models.ForeignKey(
         "experiences.Experience",
-        on_delete=models.CASCADE,
         blank=True,
         null=True,
+        on_delete=models.CASCADE,
+        related_name="photos",
     )
 
     def __str__(self) -> str:
@@ -33,6 +35,7 @@ class Video(CommonModel):
     experience = models.OneToOneField(
         "experiences.Experience",
         on_delete=models.CASCADE,
+        related_name="video",
     )
 
     def __str__(self) -> str:
