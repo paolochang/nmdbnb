@@ -35,5 +35,4 @@ class PublicUserSerializer(ModelSerializer):
             "language",
             "currency",
             "date_joined",
-            "reviews",
         )

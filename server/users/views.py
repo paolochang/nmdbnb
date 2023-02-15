@@ -100,6 +100,5 @@ class PublicUser(APIView):
             raise NotFound
         serializer = PublicUserSerializer(
             user,
-            reviews=user.reviews.all(),
         )
         return Response(serializer.data)
