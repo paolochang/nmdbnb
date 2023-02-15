@@ -2,42 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, NotAuthenticated, ParseError
 from rest_framework.status import HTTP_204_NO_CONTENT
 from .models import Room, Amenity
-from .serializers import AmenitySerializer
-
-
-def see_all_rooms(request):
-    rooms = Room.objects.all()
-    return render(
-        request,
-        "all_rooms.html",
-        {
-            "title": "Room Title",
-            "rooms": rooms,
-        },
-    )
-
-
-def see_one_room(request, room_id):
-    try:
-        room = Room.objects.get(pk=room_id)
-        return render(
-            request,
-            "room_detail.html",
-            {
-                "room": room,
-            },
-        )
-    except Room.DoesNotExist:
-        return render(
-            request,
-            "room_detail.html",
-            {
-                "not_found": True,
-            },
-        )
+from categories.models import Category
+from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
 
 
 class Amenities(APIView):
@@ -82,3 +51,58 @@ class AmenityDetail(APIView):
     def delete(self, request, pk):
         self.get_object(pk).delete()
         return Response(status=HTTP_204_NO_CONTENT)
+
+
+class Rooms(APIView):
+    def get(self, request):
+        all_rooms = Room.objects.all()
+        serializer = RoomListSerializer(all_rooms, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        if request.user.is_authenticated:
+            serializer = RoomDetailSerializer(data=request.data)
+            if serializer.is_valid():
+                category_pk = request.data.get("category")
+                if not category_pk:
+                    raise ParseError("Category is required")
+                try:
+                    category = Category.objects.get(pk=category_pk)
+                    if category.kind == Category.CategoryKindChoices.EXPERIENCES:
+                        raise ParseError("Category kind must be rooms")
+                except Category.DoesNotExist:
+                    raise ParseError("Category not found")
+
+                new_room = serializer.save(
+                    owner=request.user,
+                    category=category,
+                )
+
+                amenities = request.data.get("amenities")
+
+                for amenity_pk in amenities:
+                    try:
+                        amenity = Amenity.objects.get(pk=amenity_pk)
+                        new_room.amenities.add(amenity)
+                    except Amenity.DoesNotExist:
+                        pass
+
+                serializer = RoomDetailSerializer(new_room)
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors)
+        else:
+            raise NotAuthenticated
+
+
+class RoomDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Room.objects.get(pk=pk)
+        except Room.DoesNotExist:
+            raise NotFound
+
+    def get(self, request, pk):
+        room = self.get_object(pk)
+        serializer = RoomDetailSerializer(room)
+        return Response(serializer.data)
