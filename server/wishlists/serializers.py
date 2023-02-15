@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from rooms.serializers import RoomListSerializer
-from experiences.serializers import ExperienceSerializer
+from experiences.serializers import ExperienceListSerializer
 from .models import Wishlist
 
 
@@ -9,7 +9,7 @@ class WishlistSerializer(ModelSerializer):
         read_only=True,
         many=True,
     )
-    experiences = ExperienceSerializer(
+    experiences = ExperienceListSerializer(
         read_only=True,
         many=True,
     )
