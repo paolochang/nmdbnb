@@ -1,8 +1,12 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, NotAuthenticated, ParseError
+from rest_framework.exceptions import (
+    NotFound,
+    NotAuthenticated,
+    ParseError,
+    PermissionDenied,
+)
 from rest_framework.status import HTTP_204_NO_CONTENT
 from .models import Room, Amenity
 from categories.models import Category
@@ -73,22 +77,23 @@ class Rooms(APIView):
                 except Category.DoesNotExist:
                     raise ParseError("Category not found")
 
-                new_room = serializer.save(
-                    owner=request.user,
-                    category=category,
-                )
+                try:
+                    with transaction.atomic():
+                        new_room = serializer.save(
+                            owner=request.user,
+                            category=category,
+                        )
 
-                amenities = request.data.get("amenities")
+                        amenities = request.data.get("amenities")
 
-                for amenity_pk in amenities:
-                    try:
-                        amenity = Amenity.objects.get(pk=amenity_pk)
-                        new_room.amenities.add(amenity)
-                    except Amenity.DoesNotExist:
-                        pass
+                        for amenity_pk in amenities:
+                            amenity = Amenity.objects.get(pk=amenity_pk)
+                            new_room.amenities.add(amenity)
 
-                serializer = RoomDetailSerializer(new_room)
-                return Response(serializer.data)
+                        serializer = RoomDetailSerializer(new_room)
+                        return Response(serializer.data)
+                except Exception:
+                    raise ParseError("Amenity not found")
             else:
                 return Response(serializer.errors)
         else:
@@ -106,3 +111,12 @@ class RoomDetail(APIView):
         room = self.get_object(pk)
         serializer = RoomDetailSerializer(room)
         return Response(serializer.data)
+
+    def delete(self, request, pk):
+        room = self.get_object(pk)
+        if not request.user.is_authenticated:
+            raise NotAuthenticated
+        if room.owner != request.user:
+            raise PermissionDenied
+        room.delete()
+        return Response(status=HTTP_204_NO_CONTENT)
