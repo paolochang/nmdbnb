@@ -12,6 +12,7 @@ class ExperienceSerializer(ModelSerializer):
     class Meta:
         model = Experience
         fields = (
+            "pk",
             "name",
             "description",
         )
