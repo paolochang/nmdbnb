@@ -8,7 +8,7 @@ class Photo(CommonModel):
 
     file = models.ImageField()
     description = models.CharField(max_length=140)
-    romm = models.ForeignKey(
+    room = models.ForeignKey(
         "rooms.Room",
         blank=True,
         null=True,
