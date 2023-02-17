@@ -23,3 +23,7 @@ $ brew install poetry
 $ poetry shell
 $ python3 manage.py runserver
 ```
+
+## Reference
+
+- [VSCode doesn't show poetry virtualenvs in select interpreter option](https://stackoverflow.com/a/64434542)
