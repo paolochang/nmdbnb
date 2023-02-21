@@ -3,16 +3,21 @@ import {
   Button,
   HStack,
   IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
-import { FaAirbnb, FaMoon } from "react-icons/fa";
+import { FaAirbnb, FaMoon, FaUser, FaLock } from "react-icons/fa";
 
 const Root = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -37,7 +42,35 @@ const Root = () => {
             <ModalHeader>Log in</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <div>Hello</div>
+              <VStack>
+                <InputGroup>
+                  <InputLeftElement
+                    children={
+                      <Box color="gray.500">
+                        <FaUser />
+                      </Box>
+                    }
+                  />
+                  <Input variant="filled" placeholder="Username" />
+                </InputGroup>
+                <InputGroup>
+                  <InputLeftElement
+                    children={
+                      <Box color="gray.500">
+                        <FaLock />
+                      </Box>
+                    }
+                  />
+                  <Input
+                    type="password"
+                    variant="filled"
+                    placeholder="Password"
+                  />
+                </InputGroup>
+              </VStack>
+              <Button mt="4" colorScheme="red" w="100%">
+                Log in
+              </Button>
             </ModalBody>
           </ModalContent>
         </Modal>
