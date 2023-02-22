@@ -4,6 +4,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  LightMode,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -50,9 +51,11 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
               <Input type="password" variant="filled" placeholder="Password" />
             </InputGroup>
           </VStack>
-          <Button mt="4" colorScheme="red" w="100%">
-            Log in
-          </Button>
+          <LightMode>
+            <Button mt="4" colorScheme="red" w="100%">
+              Log in
+            </Button>
+          </LightMode>
           <SocialLogin />
         </ModalBody>
       </ModalContent>
