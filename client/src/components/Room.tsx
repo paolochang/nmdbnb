@@ -10,15 +10,21 @@ import {
 } from "@chakra-ui/react";
 import { FaStar, FaRegHeart } from "react-icons/fa";
 
-const Room = () => {
+interface IRoomProps {
+  imageUrl: string;
+  name: string;
+  rating: number;
+  city: string;
+  country: string;
+  price: number;
+}
+
+const Room = ({ imageUrl, name, rating, city, country, price }: IRoomProps) => {
   const textColor = useColorModeValue("gray.600", "gray.300");
   return (
     <VStack alignItems="flex-start" spacing={-0.5}>
       <Box position="relative" overflow="hidden" mb="2" rounded="3xl">
-        <Image
-          minH="280"
-          src="https://a0.muscache.com/im/pictures/miso/Hosting-46695796/original/6ba850bd-6582-45a5-bce7-5b96dc6f30dd.jpeg?im_w=720"
-        />
+        <Image minH="280" src={imageUrl} />
         <Button
           variant="unstyled"
           position="absolute"
@@ -32,19 +38,19 @@ const Room = () => {
       <Box>
         <Grid templateColumns="6fr 1fr" gap="2">
           <Text as="b" fontSize="md" noOfLines={1}>
-            Lac-Beauport, Quebec, Canada
+            {name}
           </Text>
-          <HStack spacing={1}>
+          <HStack spacing={1} alignItems="center">
             <FaStar size={15} />
-            <Text>5.0</Text>
+            <Text>{rating}</Text>
           </HStack>
         </Grid>
         <Text fontSize="sm" color={textColor}>
-          Viewed 10 times last week
+          {city}, {country}
         </Text>
       </Box>
       <Text fontSize="sm" color={textColor}>
-        <Text as="b">$72</Text>/ night
+        <Text as="b">${price}</Text>/ night
       </Text>
     </VStack>
   );
