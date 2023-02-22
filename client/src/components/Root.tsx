@@ -1,12 +1,13 @@
-import React from "react";
+import { Box } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
+import Header from "./Header";
 
 const Root = () => {
   return (
-    <div>
-      Root
+    <Box>
+      <Header />
       <Outlet />
-    </div>
+    </Box>
   );
 };
 
