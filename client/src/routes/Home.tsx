@@ -1,4 +1,4 @@
-import { Box, Grid } from "@chakra-ui/react";
+import { Box, Grid, Skeleton, SkeletonText } from "@chakra-ui/react";
 import Room from "../components/Room";
 
 const Home = () => {
@@ -22,12 +22,31 @@ const Home = () => {
       ].map((index) => (
         <Room key={index} />
       ))}
-      <Box w="100%" h="280" bg="red.500" />
-      <Box w="100%" h="280" bg="red.500" />
-      <Box w="100%" h="280" bg="red.500" />
-      <Box w="100%" h="280" bg="red.500" />
-      <Box w="100%" h="280" bg="red.500" />
-      <Box w="100%" h="280" bg="red.500" />
+      <Box color="red.500">
+        <Skeleton rounded="2xl" mb={4} height={280} />
+        <SkeletonText noOfLines={1} mb={4} />
+        <SkeletonText w="50%" noOfLines={2} />
+      </Box>
+      <Box color="red.500">
+        <Skeleton rounded="2xl" mb={4} height={280} />
+        <SkeletonText noOfLines={1} mb={4} />
+        <SkeletonText w="50%" noOfLines={2} />
+      </Box>
+      <Box color="red.500">
+        <Skeleton rounded="2xl" mb={4} height={280} />
+        <SkeletonText noOfLines={1} mb={4} />
+        <SkeletonText w="50%" noOfLines={2} />
+      </Box>
+      <Box color="red.500">
+        <Skeleton rounded="2xl" mb={4} height={280} />
+        <SkeletonText noOfLines={1} mb={4} />
+        <SkeletonText w="50%" noOfLines={2} />
+      </Box>
+      <Box color="red.500">
+        <Skeleton rounded="2xl" mb={4} height={280} />
+        <SkeletonText noOfLines={1} mb={4} />
+        <SkeletonText w="50%" noOfLines={2} />
+      </Box>
     </Grid>
   );
 };
