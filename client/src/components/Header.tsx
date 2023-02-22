@@ -31,12 +31,12 @@ const Header = () => {
     <HStack
       justifyContent={"space-between"}
       py={4}
-      px={8}
+      px={20}
       borderBottomWidth={1}
     >
       <Box color={logoColor}>
         <Link to="/">
-          <FaAirbnb size={28} />
+          <FaAirbnb size={32} />
         </Link>
       </Box>
       <HStack spacing={2}>
