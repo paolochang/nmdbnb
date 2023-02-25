@@ -1,5 +1,13 @@
-import { Box, Grid, GridItem, Heading, HStack, Text } from "@chakra-ui/layout";
-import { Image, Skeleton } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  GridItem,
+  Heading,
+  HStack,
+  Text,
+  VStack,
+} from "@chakra-ui/layout";
+import { Avatar, Image, Skeleton } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { getRoomDetail } from "../api";
@@ -60,6 +68,25 @@ const RoomDetail = () => {
           </GridItem>
         ))}
       </Grid>
+      <HStack justifyContent="space-between" w="40%" mt={10}>
+        <VStack w="100%" alignItems="flex-start">
+          <Skeleton w="80%" h="26px" isLoaded={!isLoading}>
+            <Heading fontSize="2xl">House hosted by {data?.owner.name}</Heading>
+          </Skeleton>
+          <Skeleton w="60%" h="18px" isLoaded={!isLoading}>
+            <HStack>
+              <Text>
+                {data?.rooms} bed{data?.rooms === 1 ? "" : "s"}
+              </Text>
+              <Text>·</Text>
+              <Text>
+                {data?.toilets} bath{data?.toilets === 1 ? "" : "s"}
+              </Text>
+            </HStack>
+          </Skeleton>
+        </VStack>
+        <Avatar name={data?.owner.name} size="lg" src={"sss"} />
+      </HStack>
     </Box>
   );
 };
