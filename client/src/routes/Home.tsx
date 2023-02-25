@@ -2,26 +2,10 @@ import { Box, Grid, Skeleton, SkeletonText } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { getRooms } from "../api";
 import Room from "../components/Room";
-
-interface IPhoto {
-  pk: number;
-  file: string;
-  description: string;
-}
-
-interface IRoom {
-  pk: string;
-  name: string;
-  country: string;
-  city: string;
-  price: number;
-  rating: number;
-  is_owner: boolean;
-  photos: IPhoto[];
-}
+import { IRoomList } from "../types";
 
 const Home = () => {
-  const { data, isLoading } = useQuery<IRoom[]>(["rooms"], getRooms);
+  const { data, isLoading } = useQuery<IRoomList[]>(["rooms"], getRooms);
 
   return (
     <Grid
@@ -39,7 +23,7 @@ const Home = () => {
     >
       {isLoading
         ? [...Array(20)].map((e, i) => (
-            <Box color="red.500">
+            <Box key={i} color="red.500">
               <Skeleton rounded="2xl" mb={4} height={280} />
               <SkeletonText noOfLines={1} mb={4} />
               <SkeletonText w="50%" noOfLines={2} />

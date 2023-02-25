@@ -12,7 +12,7 @@ import { FaStar, FaRegHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 interface IRoomProps {
-  pk: string;
+  pk: number;
   name: string;
   rating: number;
   city: string;
