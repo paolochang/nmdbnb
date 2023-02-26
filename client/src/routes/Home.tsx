@@ -1,7 +1,12 @@
 import { Box, Grid, Skeleton, SkeletonText } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { getRooms } from "../api";
 import Room from "../components/Room";
+import { IRoomList } from "../types";
 
 const Home = () => {
+  const { data, isLoading } = useQuery<IRoomList[]>(["rooms"], getRooms);
+
   return (
     <Grid
       pt="10"
@@ -16,37 +21,26 @@ const Home = () => {
       columnGap="4"
       rowGap="8"
     >
-      {[
-        1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
-        1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3,
-      ].map((index) => (
-        <Room key={index} />
-      ))}
-      <Box color="red.500">
-        <Skeleton rounded="2xl" mb={4} height={280} />
-        <SkeletonText noOfLines={1} mb={4} />
-        <SkeletonText w="50%" noOfLines={2} />
-      </Box>
-      <Box color="red.500">
-        <Skeleton rounded="2xl" mb={4} height={280} />
-        <SkeletonText noOfLines={1} mb={4} />
-        <SkeletonText w="50%" noOfLines={2} />
-      </Box>
-      <Box color="red.500">
-        <Skeleton rounded="2xl" mb={4} height={280} />
-        <SkeletonText noOfLines={1} mb={4} />
-        <SkeletonText w="50%" noOfLines={2} />
-      </Box>
-      <Box color="red.500">
-        <Skeleton rounded="2xl" mb={4} height={280} />
-        <SkeletonText noOfLines={1} mb={4} />
-        <SkeletonText w="50%" noOfLines={2} />
-      </Box>
-      <Box color="red.500">
-        <Skeleton rounded="2xl" mb={4} height={280} />
-        <SkeletonText noOfLines={1} mb={4} />
-        <SkeletonText w="50%" noOfLines={2} />
-      </Box>
+      {isLoading
+        ? [...Array(20)].map((e, i) => (
+            <Box key={i} color="red.500">
+              <Skeleton rounded="2xl" mb={4} height={280} />
+              <SkeletonText noOfLines={1} mb={4} />
+              <SkeletonText w="50%" noOfLines={2} />
+            </Box>
+          ))
+        : data?.map((room) => (
+            <Room
+              key={room.pk}
+              pk={room.pk}
+              imageUrl="" // imageUrl={room.photos[0].file}
+              name={room.name}
+              rating={room.rating}
+              city={room.city}
+              country={room.country}
+              price={room.price}
+            />
+          ))}
     </Grid>
   );
 };
