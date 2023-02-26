@@ -1,5 +1,6 @@
 import {
   Box,
+  Container,
   Grid,
   GridItem,
   Heading,
@@ -7,7 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/layout";
-import { Avatar, Image, Skeleton } from "@chakra-ui/react";
+import { Avatar, Image, Skeleton, SkeletonText } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { getRoomDetail, getRoomReviews } from "../api";
@@ -111,6 +112,27 @@ const RoomDetail = () => {
             </HStack>
           </Heading>
         </Skeleton>
+        <Container mt={5} maxW="container.lg" marginX="none">
+          <Grid w="100%" templateColumns="1fr 1fr" gap={4}>
+            {reviewsData?.map((review) => (
+              <VStack alignItems="flex-start" key={review.pk} p={2}>
+                <HStack>
+                  <Avatar name={review.user.name} src={review.user.avatar} />
+                  <VStack spacing={0}>
+                    <Heading fontSize="md">{review.user.name}</Heading>
+                    <HStack>
+                      <FaStar size="12px" />
+                      <Text>{review.rating}</Text>
+                    </HStack>
+                  </VStack>
+                </HStack>
+                <SkeletonText w="100%" h="40px" isLoaded={!isReviewsLoading}>
+                  <Text>{review.payload}</Text>
+                </SkeletonText>
+              </VStack>
+            ))}
+          </Grid>
+        </Container>
       </VStack>
     </Box>
   );
