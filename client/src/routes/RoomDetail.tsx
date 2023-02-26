@@ -10,29 +10,33 @@ import {
 import { Avatar, Image, Skeleton } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { getRoomDetail } from "../api";
-import { IRoomDetail } from "../types";
+import { getRoomDetail, getRoomReviews } from "../api";
+import { IReview, IRoomDetail } from "../types";
 import { FaStar } from "react-icons/fa";
 import DefaultImage from "../assets/images/default.png";
 
 const RoomDetail = () => {
   const { roomPk } = useParams();
-  const { isLoading, data } = useQuery<IRoomDetail>(
+  const { isLoading: isRoomLoading, data: roomData } = useQuery<IRoomDetail>(
     ["rooms", roomPk],
     getRoomDetail
   );
 
+  const { isLoading: isReviewsLoading, data: reviewsData } = useQuery<
+    IReview[]
+  >(["rooms", roomPk, "reviews"], getRoomReviews);
+
   return (
-    <Box pt="10" px={{ base: 4, lg: 20 }}>
-      <Skeleton mb="2" h="43px" w="50%" isLoaded={!isLoading}>
-        <Heading>{data?.name}</Heading>
+    <Box py="10" px={{ base: 4, lg: 20 }}>
+      <Skeleton mb="2" h="43px" w="50%" isLoaded={!isRoomLoading}>
+        <Heading>{roomData?.name}</Heading>
       </Skeleton>
-      <Skeleton h="16px" w="40%" isLoaded={!isLoading}>
+      <Skeleton h="16px" w="40%" isLoaded={!isRoomLoading}>
         <HStack>
           <FaStar size={15} />
-          <Text>{data?.rating} · </Text>
+          <Text>{roomData?.rating} · </Text>
           <Text>
-            {data?.city}, {data?.country}
+            {roomData?.city}, {roomData?.country}
           </Text>
         </HStack>
       </Skeleton>
@@ -52,15 +56,15 @@ const RoomDetail = () => {
             rowSpan={index === 0 ? 2 : 1}
             overflow="hidden"
           >
-            <Skeleton isLoaded={!isLoading} h="100%" w="100%">
+            <Skeleton isLoaded={!isRoomLoading} h="100%" w="100%">
               <Image
                 w="100%"
                 h="100%"
                 objectFit="cover"
                 src={
                   DefaultImage
-                  // data?.photos[index].file
-                  //   ? data.photos[index].file
+                  // roomData?.photos[index].file
+                  //   ? roomData.photos[index].file
                   //   : DefaultImage
                 }
               />
@@ -70,23 +74,44 @@ const RoomDetail = () => {
       </Grid>
       <HStack justifyContent="space-between" w="40%" mt={10}>
         <VStack w="100%" alignItems="flex-start">
-          <Skeleton w="80%" h="26px" isLoaded={!isLoading}>
-            <Heading fontSize="2xl">House hosted by {data?.owner.name}</Heading>
+          <Skeleton w="80%" h="26px" isLoaded={!isRoomLoading}>
+            <Heading fontSize="2xl">
+              House hosted by {roomData?.owner.name}
+            </Heading>
           </Skeleton>
-          <Skeleton w="60%" h="18px" isLoaded={!isLoading}>
+          <Skeleton w="60%" h="18px" isLoaded={!isRoomLoading}>
             <HStack>
               <Text>
-                {data?.rooms} bed{data?.rooms === 1 ? "" : "s"}
+                {roomData?.rooms} bed{roomData?.rooms === 1 ? "" : "s"}
               </Text>
               <Text>·</Text>
               <Text>
-                {data?.toilets} bath{data?.toilets === 1 ? "" : "s"}
+                {roomData?.toilets} bath{roomData?.toilets === 1 ? "" : "s"}
               </Text>
             </HStack>
           </Skeleton>
         </VStack>
-        <Avatar name={data?.owner.name} size="lg" src={"sss"} />
+        <Avatar
+          name={roomData?.owner.name}
+          size="lg"
+          src={roomData?.owner.avatar}
+        />
       </HStack>
+      <VStack alignItems="flex-start" mt={10}>
+        <Skeleton w="30%" isLoaded={!isReviewsLoading}>
+          <Heading fontSize="2xl">
+            <HStack>
+              <FaStar />
+              <Text>{roomData?.rating}</Text>
+              <Text>·</Text>
+              <Text>
+                {reviewsData?.length} review
+                {reviewsData?.length === 1 ? "" : "s"}
+              </Text>
+            </HStack>
+          </Heading>
+        </Skeleton>
+      </VStack>
     </Box>
   );
 };

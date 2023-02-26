@@ -13,3 +13,10 @@ export const getRoomDetail = async ({ queryKey }: QueryFunctionContext) => {
     .get(`rooms/${roomPk}`)
     .then((response) => response.data);
 };
+
+export const getRoomReviews = async ({ queryKey }: QueryFunctionContext) => {
+  const [_, roomPk] = queryKey;
+  return await instance
+    .get(`rooms/${roomPk}/reviews`)
+    .then((response) => response.data);
+};
